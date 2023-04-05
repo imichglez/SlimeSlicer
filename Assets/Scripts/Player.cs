@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     Animator animator;
 
     List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
+
+    bool canMove = true;
     
     // Start is called before the first frame update
     void Start()
@@ -27,7 +29,8 @@ public class Player : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if(movementInput != Vector2.zero){
+        if(canMove){
+            if(movementInput != Vector2.zero){
             bool success = TryMove(movementInput);
 
             if(!success){
@@ -43,13 +46,13 @@ public class Player : MonoBehaviour
             animator.SetBool("isMoving", false);
         }
 
-        // set movement direction 
-        if(movementInput.x < 0){
-            spriteRenderer.flipX = true;
-        } else if(movementInput.x > 0){
-            spriteRenderer.flipX = false;
+            // set movement direction 
+            if(movementInput.x < 0){
+                spriteRenderer.flipX = true;
+            } else if(movementInput.x > 0){
+                spriteRenderer.flipX = false;
+            }
         }
-        
     }
 
     private bool TryMove(Vector2 direction)
@@ -76,5 +79,20 @@ public class Player : MonoBehaviour
     public void OnMove(InputValue movementValue) 
     {
         movementInput = movementValue.Get<Vector2>();
+    }
+
+    void OnFire() 
+    {
+        animator.SetTrigger("swordAttack");
+    }
+
+    public void LockMovement() 
+    {
+        canMove = false;
+    }
+
+    public void UnlockMovement() 
+    {
+        canMove = true;
     }
 }
